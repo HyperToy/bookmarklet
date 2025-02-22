@@ -8,7 +8,11 @@ const outDir = "out";
 
 async function cleanOutDir() {
 	const files = await promises.readdir(outDir);
-	await Promise.all(files.map((file) => promises.unlink(`${outDir}/${file}`)));
+	await Promise.all(
+		files
+			.filter((file) => file.endsWith(".js"))
+			.map((file) => promises.unlink(`${outDir}/${file}`)),
+	);
 }
 
 async function copyFiles() {
@@ -27,11 +31,13 @@ async function minimizeJS() {
 async function prependJavascript() {
 	const files = await promises.readdir(outDir);
 	await Promise.all(
-		files.map(async (file) => {
-			const filePath = `${outDir}/${file}`;
-			const content = await promises.readFile(filePath, "utf-8");
-			await promises.writeFile(filePath, `javascript:${content}`);
-		}),
+		files
+			.filter((file) => file.endsWith(".js"))
+			.map(async (file) => {
+				const filePath = `${outDir}/${file}`;
+				const content = await promises.readFile(filePath, "utf-8");
+				await promises.writeFile(filePath, `javascript:${content}`);
+			}),
 	);
 }
 
