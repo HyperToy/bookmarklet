@@ -1,5 +1,6 @@
 (() => {
-	const textToCopy = `<?xml version="1.0"?><opml version="2.0"><head></head><body><outline text="&lt;a href=&quot;${window.location.href}&quot;&gt;${document.title}&lt;/a&gt;"></outline></body></opml>`;
+	const escapedHref = window.location.href.replace(/&/g, "&amp;");
+	const textToCopy = `<?xml version="1.0"?><opml version="2.0"><head></head><body><outline text="&lt;a href=&quot;${escapedHref}&quot;&gt;${document.title}&lt;/a&gt;"></outline></body></opml>`;
 	navigator.clipboard.writeText(textToCopy).then(
 		(data) => {
 			const message = document.createElement("div");
