@@ -1,5 +1,6 @@
 (() => {
-	const textToCopy = `[${document.title} ${window.location.href}]`;
+	const title = document.title.replace("[", "").replace("]", "");
+	const textToCopy = `[${title} ${window.location.href}]`;
 	navigator.clipboard.writeText(textToCopy).then(
 		(data) => {
 			const message = document.createElement("div");
