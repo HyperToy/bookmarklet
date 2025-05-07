@@ -2,9 +2,8 @@
 	const domain = window.location.hostname;
 	const isScrapboxDomain = domain.toLowerCase().endsWith("scrapbox.io");
 	const url = window.location.href;
-	const pathOnly = url.replace(/^https?:\/\/[^\/]+/, "");
 	const title = document.title.replace("[", "").replace("]", "");
-	const textToCopy = isScrapboxDomain ? `[${pathOnly}]` : `[${title} ${url}]`;
+	const textToCopy = isScrapboxDomain ? `${url}` : `[${title} ${url}]`;
 	navigator.clipboard.writeText(textToCopy).then(
 		(data) => {
 			const message = document.createElement("div");
