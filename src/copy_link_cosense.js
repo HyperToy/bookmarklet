@@ -1,9 +1,22 @@
 (() => {
 	const domain = window.location.hostname;
 	const isScrapboxDomain = domain.toLowerCase().endsWith("scrapbox.io");
+	const isTwitterDomain = () => domain.toLowerCase().endsWith("x.com");
+	const twitterUrl = () =>
+		[
+			">",
+			`${document.title.match(/Xユーザーの(.*)@.*さん: 「/)[1]}`,
+			`([@${document.URL.match(/x.com\/([^\/]*)/)[1]} ${document.URL}])`,
+			document.title.match(/「(.*)」/)[1],
+		].join(" ");
+
 	const url = window.location.href;
 	const title = document.title.replace("[", "").replace("]", "");
-	const textToCopy = isScrapboxDomain ? `${url}` : `[${title} ${url}]`;
+	const textToCopy = isScrapboxDomain
+		? `${url}`
+		: isTwitterDomain()
+			? twitterUrl()
+			: `[${title} ${url}]`;
 	navigator.clipboard.writeText(textToCopy).then(
 		(data) => {
 			const message = document.createElement("div");
