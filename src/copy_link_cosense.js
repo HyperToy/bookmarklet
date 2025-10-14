@@ -16,7 +16,10 @@
 	};
 
 	const url = window.location.href;
-	const title = document.title.replace("[", "").replace("]", "");
+	const title = document.title
+		.replace("[", "")
+		.replace("]", "")
+		.replaceAll("`", " ");
 	const textToCopy = isScrapboxDomain
 		? `${url}`
 		: isTwitterDomain()
