@@ -23,8 +23,13 @@
 	const body = encodeURIComponent(
 		isScrapboxDomain
 			? (() => {
-					const regexp = new RegExp(`(.*) - ${PROJECT_NAME}`);
-					return `[${document.title.match(regexp)[1]}]`;
+					const regexp = /(.*) - .*/;
+					const match = document.title.match(regexp);
+					const pageTitle = match[1];
+					const projectName = document.URL.split("/")[3];
+					return projectName === PROJECT_NAME
+						? `[${pageTitle}]`
+						: `[/${projectName}/${pageTitle}]`;
 				})()
 			: isTwitterDomain()
 				? twitterUrl(`[${title} ${url}]`)
