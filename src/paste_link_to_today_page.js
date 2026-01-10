@@ -35,7 +35,9 @@
 				? twitterUrl(`[${title} ${url}]`)
 				: `[${title} ${url}]`,
 	);
-	const pageTitle = new Date().toISOString().split("T")[0];
+	const pageTitle = new Date().toLocaleDateString("sv-SE", {
+		timeZone: "Asia/Tokyo",
+	});
 	window.open(
 		`https://scrapbox.io/${PROJECT_NAME}/${encodeURIComponent(pageTitle.trim())}?body=${body}`,
 	);
