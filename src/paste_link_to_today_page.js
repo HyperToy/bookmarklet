@@ -36,7 +36,7 @@
 				: `[${title} ${url}]`,
 	);
 	const pageTitle = new Date().toLocaleDateString("sv-SE", {
-		timeZone: "Asia/Tokyo",
+		timeZone: "Indian/Maldives",
 	});
 	window.open(
 		`https://scrapbox.io/${PROJECT_NAME}/${encodeURIComponent(pageTitle.trim())}?body=${body}`,
