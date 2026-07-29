@@ -1,7 +1,7 @@
 (() => {
 	const domain = window.location.hostname;
-	const isScrapboxDomain = domain.toLowerCase().endsWith("scrapbox.io");
-	const isTwitterDomain = () => domain.toLowerCase().endsWith("x.com");
+	const isScrapboxDomain = (d) => d.toLowerCase().endsWith("scrapbox.io");
+	const isTwitterDomain = (d) => d.toLowerCase().endsWith("x.com");
 	const twitterUrl = (defaultText) => {
 		try {
 			return [
@@ -19,9 +19,9 @@
 		.replace("[", "")
 		.replace("]", "")
 		.replaceAll("`", " ");
-	const textToCopy = isScrapboxDomain
+	const textToCopy = isScrapboxDomain(domain)
 		? `${url}`
-		: isTwitterDomain()
+		: isTwitterDomain(domain)
 			? twitterUrl(`[${title} ${url}]`)
 			: `[${title} ${url}]`;
 	navigator.clipboard.writeText(textToCopy).then(
