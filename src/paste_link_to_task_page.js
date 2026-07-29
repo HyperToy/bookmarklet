@@ -11,12 +11,12 @@
 	// pure functions
 	const isScrapboxDomain = (d) => d.toLowerCase().endsWith("scrapbox.io");
 	const isTwitterDomain = (d) => d.toLowerCase().endsWith("x.com");
-	const twitterUrl = (defaultText) => {
+	const twitterUrl = (defaultText, dt, du) => {
 		try {
 			return [
 				">",
-				`[@${document.URL.match(/x.com\/([^\/]*)/)[1]} ${document.URL}]:`,
-				document.title.match(/さん: 「(.*)」 \/ X/)[1],
+				`[@${du.match(/x.com\/([^\/]*)/)[1]} ${du}]:`,
+				dt.match(/さん: 「(.*)」 \/ X/)[1],
 			].join(" ");
 		} catch (e) {
 			return defaultText;
@@ -51,7 +51,7 @@
 		isScrapboxDomain(domain)
 			? scrapboxUrl(PROJECT_NAME, documentTitle, documentUrl)
 			: isTwitterDomain(domain)
-				? twitterUrl(`[${title} ${url}]`)
+				? twitterUrl(`[${title} ${url}]`, documentTitle, documentUrl)
 				: `[${title} ${url}]`,
 	);
 
