@@ -1,7 +1,13 @@
 (() => {
+	// external data
 	const PROJECT_NAME = "placeholder";
 	const NAME = "placeholder";
+	const now = new Date();
 	const domain = window.location.hostname;
+	const url = window.location.href;
+	const documentTitle = document.title;
+
+	// pure functions
 	const isScrapboxDomain = (d) => d.toLowerCase().endsWith("scrapbox.io");
 	const isTwitterDomain = (d) => d.toLowerCase().endsWith("x.com");
 	const twitterUrl = (defaultText) => {
@@ -15,8 +21,19 @@
 			return defaultText;
 		}
 	};
-	const url = window.location.href;
-	const title = document.title
+	const thisWeekTaskPage = (name, now) => {
+		const thisMonday = new Date(now).setDate(now.getDate() - now.getDay() + 1);
+		const formattedThisMonday = new Intl.DateTimeFormat("en-CA", {
+			timeZone: "Asia/Tokyo",
+			year: "numeric",
+			month: "2-digit",
+			day: "2-digit",
+		}).format(thisMonday);
+		const pageTitle = `${name}'s Task ${formattedThisMonday}週`;
+		return pageTitle;
+	};
+
+	const title = documentTitle
 		.replace("[", "")
 		.replace("]", "")
 		.replaceAll("`", " ");
@@ -36,21 +53,7 @@
 				: `[${title} ${url}]`,
 	);
 
-	const thisWeekTaskPage = (projectName, name, now) => {
-		const thisMonday = new Date(now).setDate(now.getDate() - now.getDay() + 1);
-		// const pageTitle = new Date().toLocaleDateString("sv-SE", {
-		// 	timeZone: "Indian/Maldives",
-		// });
-		const formattedThisMonday = new Intl.DateTimeFormat("en-CA", {
-			timeZone: "Asia/Tokyo",
-			year: "numeric",
-			month: "2-digit",
-			day: "2-digit",
-		}).format(thisMonday);
-		const pageTitle = `${name}'s Task ${formattedThisMonday}週`;
-		return pageTitle;
-	};
-	const pageTitle = thisWeekTaskPage(PROJECT_NAME, NAME, new Date());
+	const pageTitle = thisWeekTaskPage(NAME, now);
 	const cosenseUrl = `https://scrapbox.io/${PROJECT_NAME}/${encodeURIComponent(pageTitle.trim())}?body=${body}`;
 	window.open(cosenseUrl);
 })();
