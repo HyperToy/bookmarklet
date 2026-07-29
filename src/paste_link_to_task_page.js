@@ -6,6 +6,7 @@
 	const domain = window.location.hostname;
 	const url = window.location.href;
 	const documentTitle = document.title;
+	const documentUrl = document.URL;
 
 	// pure functions
 	const isScrapboxDomain = (d) => d.toLowerCase().endsWith("scrapbox.io");
@@ -39,15 +40,15 @@
 		.replaceAll("`", " ");
 	const body = encodeURIComponent(
 		isScrapboxDomain(domain)
-			? (() => {
+			? ((pn, dt, du) => {
 					const regexp = /(.*) - .*/;
-					const match = document.title.match(regexp);
+					const match = dt.match(regexp);
 					const pageTitle = match[1];
-					const projectName = document.URL.split("/")[3];
-					return projectName === PROJECT_NAME
+					const projectName = du.split("/")[3];
+					return projectName === pn
 						? `[${pageTitle}]`
 						: `[/${projectName}/${pageTitle}]`;
-				})()
+				})(PROJECT_NAME, documentTitle, documentUrl)
 			: isTwitterDomain(domain)
 				? twitterUrl(`[${title} ${url}]`)
 				: `[${title} ${url}]`,
