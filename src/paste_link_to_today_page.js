@@ -7,9 +7,8 @@
 		try {
 			return [
 				">",
-				document.title.match(/「(.*)」/)[1],
-				`(${document.title.match(/Xユーザーの(.*)さん: 「/)[1]}`,
-				`[@${document.URL.match(/x.com\/([^\/]*)/)[1]} ${document.URL}])`,
+				`[@${document.URL.match(/x.com\/([^\/]*)/)[1]} ${document.URL}]:`,
+				document.title.match(/さん: 「(.*)」 \/ X/)[1],
 			].join(" ");
 		} catch (e) {
 			return defaultText;
