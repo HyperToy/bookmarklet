@@ -22,6 +22,15 @@
 			return defaultText;
 		}
 	};
+	const scrapboxUrl = (pn, dt, du) => {
+		const regexp = /(.*) - .*/;
+		const match = dt.match(regexp);
+		const pageTitle = match[1];
+		const projectName = du.split("/")[3];
+		return projectName === pn
+			? `[${pageTitle}]`
+			: `[/${projectName}/${pageTitle}]`;
+	};
 	const thisWeekTaskPage = (name, now) => {
 		const thisMonday = new Date(now).setDate(now.getDate() - now.getDay() + 1);
 		const formattedThisMonday = new Intl.DateTimeFormat("en-CA", {
@@ -40,15 +49,7 @@
 		.replaceAll("`", " ");
 	const body = encodeURIComponent(
 		isScrapboxDomain(domain)
-			? ((pn, dt, du) => {
-					const regexp = /(.*) - .*/;
-					const match = dt.match(regexp);
-					const pageTitle = match[1];
-					const projectName = du.split("/")[3];
-					return projectName === pn
-						? `[${pageTitle}]`
-						: `[/${projectName}/${pageTitle}]`;
-				})(PROJECT_NAME, documentTitle, documentUrl)
+			? scrapboxUrl(PROJECT_NAME, documentTitle, documentUrl)
 			: isTwitterDomain(domain)
 				? twitterUrl(`[${title} ${url}]`)
 				: `[${title} ${url}]`,
