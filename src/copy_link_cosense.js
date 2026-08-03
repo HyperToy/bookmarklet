@@ -3,6 +3,10 @@
 	const url = window.location.href;
 	const documentTitle = document.title;
 	const documentUrl = document.URL;
+	const cond = (cases, fallback) => (x) => {
+		const found = cases.find(([test]) => test(x));
+		return (found ? found[1] : fallback)();
+	};
 	const isScrapboxDomain = (d) => d.toLowerCase().endsWith("scrapbox.io");
 	const isTwitterDomain = (d) => d.toLowerCase().endsWith("x.com");
 	const twitterUrl = (defaultText, dt, du) => {
@@ -21,11 +25,16 @@
 		.replace("[", "")
 		.replace("]", "")
 		.replaceAll("`", " ");
-	const textToCopy = isScrapboxDomain(domain)
-		? `${url}`
-		: isTwitterDomain(domain)
-			? twitterUrl(`[${title} ${url}]`, documentTitle, documentUrl)
-			: `[${title} ${url}]`;
+	const textToCopy = cond(
+		[
+			[isScrapboxDomain, () => `${url}`],
+			[
+				isTwitterDomain,
+				() => twitterUrl(`[${title} ${url}]`, documentTitle, documentUrl),
+			],
+		],
+		() => `[${title} ${url}]`,
+	)(domain);
 	navigator.clipboard.writeText(textToCopy).then(
 		(data) => {
 			const message = document.createElement("div");
