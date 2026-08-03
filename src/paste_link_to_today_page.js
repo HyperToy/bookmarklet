@@ -7,6 +7,10 @@
 	const documentUrl = document.URL;
 
 	// pure functions
+	const cond = (cases, fallback) => (x) => {
+		const found = cases.find(([test]) => test(x));
+		return (found ? found[1] : fallback)();
+	};
 	const isScrapboxDomain = (d) => d.toLowerCase().endsWith("scrapbox.io");
 	const isTwitterDomain = (d) => d.toLowerCase().endsWith("x.com");
 	const twitterUrl = (defaultText, dt, du) => {
@@ -35,11 +39,19 @@
 		.replace("]", "")
 		.replaceAll("`", " ");
 	const body = encodeURIComponent(
-		isScrapboxDomain(domain)
-			? scrapboxUrl(PROJECT_NAME, documentTitle, documentUrl)
-			: isTwitterDomain(domain)
-				? twitterUrl(`[${title} ${url}]`, documentTitle, documentUrl)
-				: `[${title} ${url}]`,
+		cond(
+			[
+				[
+					isScrapboxDomain,
+					() => scrapboxUrl(PROJECT_NAME, documentTitle, documentUrl),
+				],
+				[
+					isTwitterDomain,
+					() => twitterUrl(`[${title} ${url}]`, documentTitle, documentUrl),
+				],
+			],
+			() => `[${title} ${url}]`,
+		)(domain),
 	);
 	const pageTitle = new Date().toLocaleDateString("sv-SE", {
 		timeZone: "Indian/Maldives",
