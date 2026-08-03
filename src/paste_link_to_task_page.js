@@ -57,8 +57,8 @@
 	};
 
 	const title = documentTitle
-		.replace("[", "")
-		.replace("]", "")
+		.replaceAll("[", "")
+		.replaceAll("]", "")
 		.replaceAll("`", " ");
 	const body = encodeURIComponent(
 		cond(
@@ -71,9 +71,9 @@
 					isTwitterDomain,
 					() => twitterUrl(`[${title} ${url}]`, documentTitle, documentUrl),
 				],
-				[isImslpDomain, () => imslpUrl(documentTitle, documentUrl)],
-				[isYodobashiDomain, () => yodobashiUrl(documentTitle, documentUrl)],
-				[isFindyDomain, () => findyUrl(documentTitle, documentUrl)],
+				[isImslpDomain, () => imslpUrl(title, documentUrl)],
+				[isYodobashiDomain, () => yodobashiUrl(title, documentUrl)],
+				[isFindyDomain, () => findyUrl(title, documentUrl)],
 			],
 			() => `[${title} ${url}]`,
 		)(domain),
