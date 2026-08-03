@@ -12,6 +12,15 @@
 		return (found ? found[1] : fallback)();
 	};
 	const isScrapboxDomain = (d) => d.toLowerCase().endsWith("scrapbox.io");
+	const scrapboxUrl = (pn, dt, du) => {
+		const regexp = /(.*) - .*/;
+		const match = dt.match(regexp);
+		const pageTitle = match[1];
+		const projectName = du.split("/")[3];
+		return projectName === pn
+			? `[${pageTitle}]`
+			: `[/${projectName}/${pageTitle}]`;
+	};
 	const isTwitterDomain = (d) => d.toLowerCase().endsWith("x.com");
 	const twitterUrl = (defaultText, dt, du) => {
 		try {
@@ -23,15 +32,6 @@
 		} catch (e) {
 			return defaultText;
 		}
-	};
-	const scrapboxUrl = (pn, dt, du) => {
-		const regexp = /(.*) - .*/;
-		const match = dt.match(regexp);
-		const pageTitle = match[1];
-		const projectName = du.split("/")[3];
-		return projectName === pn
-			? `[${pageTitle}]`
-			: `[/${projectName}/${pageTitle}]`;
 	};
 
 	const title = documentTitle
