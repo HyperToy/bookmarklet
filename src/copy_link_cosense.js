@@ -1,28 +1,30 @@
 (() => {
 	const domain = window.location.hostname;
+	const url = window.location.href;
+	const documentTitle = document.title;
+	const documentUrl = document.URL;
 	const isScrapboxDomain = (d) => d.toLowerCase().endsWith("scrapbox.io");
 	const isTwitterDomain = (d) => d.toLowerCase().endsWith("x.com");
-	const twitterUrl = (defaultText) => {
+	const twitterUrl = (defaultText, dt, du) => {
 		try {
 			return [
 				">",
-				`[@${document.URL.match(/x.com\/([^\/]*)/)[1]} ${document.URL}]:`,
-				document.title.match(/さん: 「(.*)」 \/ X/)[1],
+				`[@${du.match(/x.com\/([^\/]*)/)[1]} ${du}]:`,
+				dt.match(/さん: 「(.*)」 \/ X/)[1],
 			].join(" ");
 		} catch (e) {
 			return defaultText;
 		}
 	};
 
-	const url = window.location.href;
-	const title = document.title
+	const title = documentTitle
 		.replace("[", "")
 		.replace("]", "")
 		.replaceAll("`", " ");
 	const textToCopy = isScrapboxDomain(domain)
 		? `${url}`
 		: isTwitterDomain(domain)
-			? twitterUrl(`[${title} ${url}]`)
+			? twitterUrl(`[${title} ${url}]`, documentTitle, documentUrl)
 			: `[${title} ${url}]`;
 	navigator.clipboard.writeText(textToCopy).then(
 		(data) => {
