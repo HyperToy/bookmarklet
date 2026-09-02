@@ -100,7 +100,39 @@
 		}
 		const body = stripLoneSurrogates(extractText(tweetTextElement));
 		console.log("[bookmarklet] DOM から抽出した本文:\n", body);
-		return body;
+		const cardUrl = cardLinkUrl(article, tweetTextElement);
+		if (cardUrl === null) {
+			return body;
+		}
+		return body === "" ? cardUrl : `${body}\n${cardUrl}`;
+	};
+	// 末尾の URL はカード表示に置き換えられて tweetText から消える。元 URL は DOM のどこにも
+	// 残っていないので t.co で補い、後で人間が張り替える。
+	const cardLinkUrl = (article, tweetTextElement) => {
+		const card = article.querySelector('[data-testid="card.wrapper"]');
+		if (!card) {
+			return null;
+		}
+		const link = card.querySelector('a[href^="https://t.co/"]');
+		if (!link) {
+			console.log(
+				"[bookmarklet] カードはありますが t.co リンクがありません（投票などの可能性）",
+			);
+			return null;
+		}
+		if (tweetTextElement.querySelector(`a[href="${link.href}"]`)) {
+			console.log(
+				"[bookmarklet] カードのリンクは本文にも含まれているため追加しません:",
+				link.href,
+			);
+			return null;
+		}
+		console.warn(
+			"[bookmarklet] カードの t.co リンクを本文末尾に追加しました。元 URL は DOM に無いため手動で張り替えてください:",
+			link.href,
+		);
+		showMessage("カードの URL は t.co のままです", "black", 3000);
+		return link.href;
 	};
 	const extractText = (node) => {
 		if (node.nodeType === Node.TEXT_NODE) {
