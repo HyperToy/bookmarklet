@@ -51,3 +51,10 @@ node -e 'const s=require("fs").readFileSync("out/<name>.js","utf-8"); console.lo
 - `%0A` が改行、行頭 1 スペースがインデント、URL 単独行が埋め込みプレイヤーになる
 - ページ名のスペースは `_` に置換する（例: `Twitter_2026-09-01`）
 - タイトル整形の仕様は https://scrapbox.io/hazuki-log/bookmarkletのlinkの加工 を参照
+
+## 書き分け
+
+https://scrapbox.io/hazuki-log/はわわわんの原則 に従う。コードに How、テストに What、コミットログに Why、コメントに Why not。
+
+- 経緯を知らないと通じない文は書かない
+- issue に How は書かない
