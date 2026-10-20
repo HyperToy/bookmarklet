@@ -14,17 +14,15 @@
 		return (found ? found[1] : fallback)();
 	};
 	const isScrapboxDomain = (d) => d.toLowerCase().endsWith("scrapbox.io");
-	const isTwitterDomain = (d) => d.toLowerCase().endsWith("x.com");
-	const twitterUrl = (defaultText, dt, du) => {
-		try {
-			return [
-				">",
-				`[@${du.match(/x.com\/([^\/]*)/)[1]} ${du}]:`,
-				dt.match(/さん: 「(.*)」 \/ X/)[1],
-			].join(" ");
-		} catch (e) {
-			return defaultText;
-		}
+	const isTwitterDomain = (d) => {
+		const h = d.toLowerCase();
+		return h === "x.com" || h.endsWith(".x.com");
+	};
+	const isYoutubeDomain = (d) => {
+		const h = d.toLowerCase();
+		return ["youtube.com", "youtu.be"].some(
+			(x) => h === x || h.endsWith(`.${x}`),
+		);
 	};
 	const scrapboxUrl = (pn, dt, du) => {
 		const regexp = /(.*) - .*/;
@@ -55,6 +53,33 @@
 		const pageTitle = `${name}'s Task ${formattedThisMonday}週`;
 		return pageTitle;
 	};
+	const showMessage = (text, backgroundColor, ms) => {
+		const message = document.createElement("div");
+		message.style.position = "fixed";
+		message.style.bottom = "10px";
+		message.style.right = "10px";
+		message.style.padding = "10px";
+		message.style.backgroundColor = backgroundColor;
+		message.style.color = "white";
+		message.style.zIndex = 10000;
+		message.textContent = text;
+		document.body.appendChild(message);
+		setTimeout(() => {
+			document.body.removeChild(message);
+		}, ms);
+	};
+
+	console.log("[bookmarklet] domain:", domain);
+	// X / YouTube は Twitter yyyy-mm-dd / YouTube yyyy-mm-dd 側の取り込み先が決まっているので、
+	// 会社アカウントの Task ページへ送ってしまう誤爆を防ぐ
+	if (isTwitterDomain(domain) || isYoutubeDomain(domain)) {
+		console.warn(
+			"[bookmarklet] X / YouTube はこの bookmarklet の対象外のため、何もしませんでした:",
+			url,
+		);
+		showMessage("X / YouTube はこの bookmarklet の対象外です", "red", 3000);
+		return;
+	}
 
 	const title = documentTitle
 		.replaceAll("[", "")
@@ -67,10 +92,6 @@
 					isScrapboxDomain,
 					() => scrapboxUrl(PROJECT_NAME, documentTitle, documentUrl),
 				],
-				[
-					isTwitterDomain,
-					() => twitterUrl(`[${title} ${url}]`, documentTitle, documentUrl),
-				],
 				[isImslpDomain, () => imslpUrl(title, documentUrl)],
 				[isYodobashiDomain, () => yodobashiUrl(title, documentUrl)],
 				[isFindyDomain, () => findyUrl(title, documentUrl)],
@@ -81,5 +102,7 @@
 
 	const pageTitle = thisWeekTaskPage(NAME, now);
 	const cosenseUrl = `https://scrapbox.io/${PROJECT_NAME}/${encodeURIComponent(pageTitle.trim())}?body=${body}`;
+	console.log("[bookmarklet] 送り先:", pageTitle);
+	console.log("[bookmarklet] URL:", cosenseUrl);
 	window.open(cosenseUrl);
 })();
