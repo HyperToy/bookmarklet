@@ -176,10 +176,7 @@
 	const youtubeText = (t, u) => {
 		const videoId = youtubeVideoId(u);
 		if (!videoId) {
-			console.log(
-				"[bookmarklet] YouTube の動画ページではないため、通常のリンクにします:",
-				u,
-			);
+			console.log("[bookmarklet] YouTube の動画ページではありません:", u);
 			return `[${t} ${u}]`;
 		}
 		const start = new URL(u).searchParams.get("t");
