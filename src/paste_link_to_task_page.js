@@ -70,7 +70,7 @@
 	};
 
 	console.log("[bookmarklet] domain:", domain);
-	// X / YouTube は Twitter yyyy-mm-dd / YouTube yyyy-mm-dd 側の取り込み先が決まっているので、
+	// X / YouTube は paste_link_to_today_page / paste_link_to_web_clip_page で貼るものなので、
 	// 会社アカウントの Task ページへ送ってしまう誤爆を防ぐ
 	if (isTwitterDomain(domain) || isYoutubeDomain(domain)) {
 		console.warn(
