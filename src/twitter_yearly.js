@@ -1,7 +1,9 @@
 (() => {
 	const username = "";
 	const today = new Date();
-	const tomorrow = new Date(today).setDate(today.getDate() + 1);
+	// setDate は Date ではなく timestamp を返すので、生成と加算は繋げて書けない
+	const tomorrow = new Date(today);
+	tomorrow.setDate(today.getDate() + 1);
 	const month = (today.getMonth() + 1).toString().padStart(2, "0");
 	const month2 = (tomorrow.getMonth() + 1).toString().padStart(2, "0");
 	const day = today.getDate().toString().padStart(2, "0");
