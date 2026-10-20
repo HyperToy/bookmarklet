@@ -32,7 +32,7 @@ node -e 'const s=require("fs").readFileSync("out/<name>.js","utf-8"); console.lo
 
 ## 共通化
 
-純粋関数（`cond` / `isXxxDomain` / 整形関数 / `showMessage` など）は 3 ファイルに同一定義で複製されている。#6 で `src/lib/` に集約するまでは**複製を維持する**。1 ファイルだけ直して差分を作らない。
+純粋関数（`cond` / `isXxxDomain` / 整形関数 / `showMessage` など）は 4 ファイルに同一定義で複製されている。#6 で `src/lib/` に集約するまでは**複製を維持する**。1 ファイルだけ直して差分を作らない。
 
 ## DOM 由来の文字列
 
