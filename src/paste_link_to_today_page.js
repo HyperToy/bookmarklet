@@ -173,22 +173,19 @@
 			(x) => h === x || h.endsWith(`.${x}`),
 		);
 	};
-	const youtubeTarget = (t, u, today) => {
+	const youtubeText = (t, u) => {
 		const videoId = youtubeVideoId(u);
 		if (!videoId) {
 			console.log(
-				"[bookmarklet] YouTube の動画ページではないため、今日の日付ページへ送ります:",
+				"[bookmarklet] YouTube の動画ページではないため、通常のリンクにします:",
 				u,
 			);
-			return { text: `[${t} ${u}]`, page: today };
+			return `[${t} ${u}]`;
 		}
 		const start = new URL(u).searchParams.get("t");
 		const videoUrl = `https://www.youtube.com/watch?v=${videoId}${start ? `&t=${start}` : ""}`;
 		console.log("[bookmarklet] YouTube 動画 ID:", videoId, "/ URL:", videoUrl);
-		return {
-			text: [`[${t} ${videoUrl}]`, ` [${videoUrl}]`].join("\n"),
-			page: `YouTube ${today}`,
-		};
+		return [`[${t} ${videoUrl}]`, ` [${videoUrl}]`].join("\n");
 	};
 	const youtubeVideoId = (u) => {
 		const parsed = new URL(u);
@@ -238,42 +235,28 @@
 	const today = new Date().toLocaleDateString("sv-SE", {
 		timeZone: "Indian/Maldives",
 	});
-	const target = cond(
+	const text = cond(
 		[
 			[
 				isScrapboxDomain,
-				() => ({
-					text: scrapboxUrl(PROJECT_NAME, documentTitle, documentUrl),
-					page: today,
-				}),
+				() => scrapboxUrl(PROJECT_NAME, documentTitle, documentUrl),
 			],
 			[
 				isTwitterDomain,
-				() => ({
-					text: twitterText(`[${title} ${url}]`, documentTitle, documentUrl),
-					page: `Twitter ${today}`,
-				}),
+				() => twitterText(`[${title} ${url}]`, documentTitle, documentUrl),
 			],
-			[isYoutubeDomain, () => youtubeTarget(title, url, today)],
-			[
-				isImslpDomain,
-				() => ({ text: imslpUrl(title, documentUrl), page: today }),
-			],
-			[
-				isYodobashiDomain,
-				() => ({ text: yodobashiUrl(title, documentUrl), page: today }),
-			],
-			[
-				isFindyDomain,
-				() => ({ text: findyUrl(title, documentUrl), page: today }),
-			],
+			[isYoutubeDomain, () => youtubeText(title, url)],
+			[isImslpDomain, () => imslpUrl(title, documentUrl)],
+			[isYodobashiDomain, () => yodobashiUrl(title, documentUrl)],
+			[isFindyDomain, () => findyUrl(title, documentUrl)],
 		],
-		() => ({ text: `[${title} ${url}]`, page: today }),
+		() => `[${title} ${url}]`,
 	)(domain);
-	const pagePath = encodeURIComponent(target.page.trim().replaceAll(" ", "_"));
-	const cosenseUrl = `https://scrapbox.io/${PROJECT_NAME}/${pagePath}?body=${encodeURIComponent(target.text)}`;
-	console.log("[bookmarklet] domain:", domain, "/ 送り先:", target.page);
-	console.log("[bookmarklet] body:\n", target.text);
+	const page = today;
+	const pagePath = encodeURIComponent(page.replaceAll(" ", "_"));
+	const cosenseUrl = `https://scrapbox.io/${PROJECT_NAME}/${pagePath}?body=${encodeURIComponent(text)}`;
+	console.log("[bookmarklet] domain:", domain, "/ 送り先:", page);
+	console.log("[bookmarklet] body:\n", text);
 	console.log("[bookmarklet] URL:", cosenseUrl);
 	window.open(cosenseUrl);
 })();
