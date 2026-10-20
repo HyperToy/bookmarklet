@@ -51,3 +51,22 @@ node -e 'const s=require("fs").readFileSync("out/<name>.js","utf-8"); console.lo
 - `%0A` が改行、行頭 1 スペースがインデント、URL 単独行が埋め込みプレイヤーになる
 - ページ名のスペースは `_` に置換する（例: `Twitter_2026-09-01`）
 - タイトル整形の仕様は https://scrapbox.io/hazuki-log/bookmarkletのlinkの加工 を参照
+
+## 書き分け（はわわわんの原則）
+
+https://scrapbox.io/hazuki-log/はわわわんの原則
+
+適切なものを適切な場所に書く。1 つの場所に全部を書かない。
+
+- コード: How
+- テストコード: What
+- コミットログ: Why
+- PR 本文: What + Why
+- コードコメント: Why not
+- README: What + How to start
+
+書くときの注意:
+
+- 経緯を知らないと意味が通じない文は書かない
+  - 例: 「レビューで見つかった」「この PR で入ったものではない」
+- issue には現象・原因・期待する挙動を書く。直し方（How）はコードに書く
